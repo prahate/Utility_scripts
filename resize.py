@@ -31,6 +31,6 @@ def resize_aspect_fit():
         else:
             image.save(fname + "_small" + extension, 'JPEG', quality=90)
 
-
-resize_aspect_fit()
+if __name__ == "__main__":
+    resize_aspect_fit()
 
