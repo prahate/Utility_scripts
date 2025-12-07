@@ -1,6 +1,7 @@
 from PIL import Image, UnidentifiedImageError
 import os
 from natsort import natsorted
+import argparse
 
 # --------------- USER INPUT -------------------- #
 
@@ -28,4 +29,18 @@ def webp_to_jpg(in_folder):
             im.save(fname + extension, 'JPEG', quality=90)
 
 if __name__ == "__main__":
-    webp_to_jpg(folder)
+    # 1. Create an ArgumentParser object
+    parser = argparse.ArgumentParser(description="Script to convert webp to jpeg.")
+
+    # 2. Add arguments
+    parser.add_argument("-f", "--file", required=True, help="Folder containing webp files")
+
+    # 3. Parse the arguments
+    args = parser.parse_args()
+
+    # 4. Access the parsed arguments
+    print(f"Hello, {args.file}!")
+    if args.file:
+        webp_to_jpg(args.file)
+    else:
+        print("No argument provided")
