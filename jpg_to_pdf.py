@@ -3,12 +3,14 @@ from PIL import Image, UnidentifiedImageError
 import os
 import argparse
 from natsort import natsorted
+from resize import resize_image
 
 pdf = FPDF()
 # --------------- USER INPUT -------------------- #
 
 folder = r"/home/span-blr-lt167/Documents/"   # Folder containing all the images.
 name = "output.pdf"                          # Name of the output PDF file.
+resz_ratio= 0.6
 
 # Function to convert webp to jpg
 def webp_to_jpg(in_folder):
@@ -83,6 +85,7 @@ if __name__ == "__main__":
     # 2. Add arguments
     parser.add_argument("-f", "--file", required=True, help="File/Folder containing jpg files")
     parser.add_argument("-o", "--output", required=True, help="Output pdf file name")
+    parser.add_argument("-r", "--resize", required=False, help="Resize the jpg/png images")
     
     # 3. Parse the arguments
     args = parser.parse_args()
@@ -98,6 +101,9 @@ if __name__ == "__main__":
         out_pdf = "output.pdf"
         
     converted = []
+
+    if args.resize:
+        resize_image(in_file, resz_ratio)
             
     if in_file:
         try:
