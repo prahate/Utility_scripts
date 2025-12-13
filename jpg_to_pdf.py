@@ -61,7 +61,7 @@ def add_images_to_list(in_folder):
         # ------------- ADD ALL THE IMAGES IN A LIST ------------- #
         try:
             for dirpath, dirnames, filenames in os.walk(in_folder):
-                for filename in [f for f in filenames if f.endswith(".jpg")]:
+                for filename in [f for f in filenames if f.endswith(".jpg") or f.endswith(".png")]:
                     full_path = os.path.join(dirpath, filename)
                     imagelist.append(full_path)
         except FileNotFoundError:
@@ -70,10 +70,10 @@ def add_images_to_list(in_folder):
             print(f"An unexpected error occurred: {e}")
 
         imsorted = natsorted(imagelist)                      # Sort the images by name.
-        for i in range(0, len(imsorted)):
-            print(imsorted[i])
+        #for i in range(0, len(imsorted)):
+        #    print(imsorted[i])
 
-        print("\nFound " + str(len(imsorted)) + " image files. Converting to PDF....\n")
+        #print("\nFound " + str(len(imsorted)) + " image files. Converting to PDF....\n")
         return imsorted
 
 if __name__ == "__main__":
@@ -96,6 +96,8 @@ if __name__ == "__main__":
         out_pdf = args.output + ".pdf"
     else:
         out_pdf = "output.pdf"
+        
+    converted = []
             
     if in_file:
         try:
@@ -107,6 +109,7 @@ if __name__ == "__main__":
 
             out_file = os.path.join(in_file, out_pdf)
             pdf.output(out_file)                                 # Save the PDF.
+            converted.append(out_pdf)
         except FileNotFoundError:
             print("No such file or directory")
         except TypeError:
@@ -114,5 +117,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Exception occured {e}")
         else:
+            for i in range(0, len(converted)):
+                print(converted[i])
             print("PDF generated successfully!")
     
