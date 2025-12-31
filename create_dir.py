@@ -3,10 +3,26 @@ from natsort import natsorted
 import zipfile
 
 ziplist = []
+sh_fname = "convert.sh"
 
-def unzip_files():
-	if ziplist:
-		for zfile in ziplist:
+def create_sh_script(flist):
+	with open(sh_fname, 'w') as fh:
+		fh.write("#!/bin/bash\n")
+		fh.write("cd /<>/Utility_scripts\n")
+		for i in range(0, len(flist)):
+			fname, ext = os.path.splitext(flist[i])
+			pdf_name = os.path.basename(fname)
+			fentry = "python3 jpg_to_pdf.py -f "
+			fentry += fname
+			fentry += " -wpr -o "
+			fentry += pdf_name
+			fentry += "\n"
+			fh.write(fentry)
+		fh.close()
+
+def unzip_files(indir):
+	if indir:
+		for zfile in indir:
 			fname, ext = os.path.splitext(zfile)
 			try:
 				with zipfile.ZipFile(zfile, mode='r') as myzip:
@@ -48,6 +64,8 @@ def create_dirs(dpath):
 if __name__ == "__main__":
 	dirname = sys.argv[1]
 	create_dirs(dirname)
-	unzip_files()
+	sorted_flist = natsorted(ziplist)
+	unzip_files(sorted_flist)
+	create_sh_script(sorted_flist)
 
 	
