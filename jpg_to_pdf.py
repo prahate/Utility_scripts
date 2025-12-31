@@ -142,9 +142,9 @@ if __name__ == "__main__":
             pdf.output(out_file)                                 # Save the PDF.
             converted.append(out_pdf)
         except FileNotFoundError:
-            print("No such file or directory")
+            print("FileNotFound:No such file or directory")
         except TypeError:
-            print("No such file or directory")
+            print("TypeError:No such file or directory")
         except Exception as e:
             print(f"Exception occured {e}")
         else:
