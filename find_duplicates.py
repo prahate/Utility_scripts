@@ -10,6 +10,11 @@ import sys
 import shutil
 from pathlib import Path
 
+
+HOME='/home/pratham-rpi3/Documents'
+out_file = os.path.join(HOME, "duplicates.txt")
+#out_dir = "/media/pratham-rpi3/62 GB Volume/Documents"
+
 def chunk_reader(fobj, chunk_size=1024):
     """Generator that reads a file in chunks of bytes"""
     while True:
@@ -76,24 +81,27 @@ def check_for_duplicates(paths, hash=hashlib.sha1):
         if len(files_list) < 2:
             continue    # this hash of fist 1k file bytes is unique, no need to spend cpy cycles on it
 
-        dups_dir = '/home/odroid/Documents/Duplicates'
-        for filename in files_list:
-            try: 
-                full_hash = get_hash(filename, first_chunk_only=False)
-                duplicate = hashes_full.get(full_hash)
-                if duplicate:
-                    #print(f"Duplicate filename {dups_fname}")
-                    folder_name = Path(filename).stem
-                    dir_name = os.path.join(dups_dir,folder_name)
-                    os.mkdir(dir_name)
-                    shutil.copy(duplicate, dir_name)
-                    shutil.copy(filename, dir_name)
-                    print("Duplicate found: {} and {}".format(filename, duplicate))
-                else:
-                    hashes_full[full_hash] = filename
-            except (OSError,):
-                # the file access might've changed till the exec point got here 
-                continue
+        with open(out_file, 'a') as fout:
+            for filename in files_list:
+                try: 
+                    full_hash = get_hash(filename, first_chunk_only=False)
+                    duplicate = hashes_full.get(full_hash)
+                    if duplicate:
+                        #print(f"Duplicate filename {duplicate}")
+                        #folder_name = Path(filename).stem
+                        #dir_name = os.path.join(dups_dir,folder_name)
+                        #os.mkdir(dir_name)
+                        #shutil.copy(duplicate, dir_name)
+                        #shutil.copy(filename, dir_name)
+                        fout.writelines(duplicate + "\n")
+                        fout.writelines(filename + "\n")
+                        print("Duplicate found: {} and {}".format(filename, duplicate))
+                    else:
+                        hashes_full[full_hash] = filename
+                except (OSError,) as e:
+                    print(f"Exception happend {e}")
+                    # the file access might've changed till the exec point got here 
+                    continue
 
 
 if __name__ == "__main__":
